@@ -37,10 +37,12 @@ android {
 
 dependencies {
     val media3_version = "1.4.1" // Usa la versión más reciente disponible
-    implementation ("androidx.media3:media3-exoplayer:$media3_version")       // Para reproducir audio/video
-    implementation ("androidx.media3:media3-exoplayer-hls:$media3_version")
-    implementation ("androidx.media3:media3-ui:$media3_version")               // UI de ExoPlayer
-    implementation ("androidx.media3:media3-session:$media3_version")          // Sesión de medios (para integración con notificaciones y controles externos)
+    implementation("androidx.media3:media3-exoplayer:$media3_version")       // Para reproducir audio/video
+    implementation("androidx.media3:media3-exoplayer-hls:$media3_version")
+    implementation("androidx.media3:media3-ui:$media3_version")               // UI de ExoPlayer
+    implementation("androidx.media3:media3-session:$media3_version")          // Sesión de medios (para integración con notificaciones y controles externos)
+
+    implementation("com.github.bumptech.glide:glide:4.15.1") // Mantén solo esta línea
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
