@@ -16,6 +16,9 @@
         android:theme="@style/Theme.IpTvAndroidStudio"
         tools:targetApi="31">
         <activity
+            android:name=".AddChannelActivity"
+            android:exported="false" />
+        <activity
             android:name=".EditChannelActivity"
             android:exported="false" />
         <activity

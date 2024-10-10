@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddChannelActivity">
+
+    <TextView
+        android:id="@+id/tv_title_add_channel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Agregar Canal"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp" />
+
+    <EditText
+        android:id="@+id/et_channel_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Nombre del Canal"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_add_channel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/et_channel_category"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Categoría"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@id/et_channel_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/et_channel_link"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Link de Transmisión"
+        android:inputType="textUri"
+        app:layout_constraintTop_toBottomOf="@id/et_channel_category"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:padding="10dp" />
+
+    <EditText
+        android:id="@+id/et_channel_image"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="URL de Imagen"
+        android:inputType="textUri"
+        app:layout_constraintTop_toBottomOf="@id/et_channel_link"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:padding="10dp" />
+
+    <Button
+        android:id="@+id/btn_save_channel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Guardar Canal"
+        app:layout_constraintTop_toBottomOf="@id/et_channel_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"
+        android:padding="10dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

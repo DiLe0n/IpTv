@@ -3,6 +3,7 @@ package com.hanzeel.iptvandroidstudio
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private var channelList: MutableList<Channel> = mutableListOf()
     private lateinit var playerView: PlayerView
     private lateinit var player: ExoPlayer
+
 
     // Registrar el ActivityResultLauncher para manejar el resultado del EditChannelActivity
     private val editChannelLauncher = registerForActivityResult(
@@ -49,9 +51,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val addChannelLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val newChannel = result.data?.getSerializableExtra("newChannel") as? Channel
+            newChannel?.let {
+                channelList.add(it) // Agregar el nuevo canal a la lista
+                channelAdapter.notifyItemInserted(channelList.size - 1) // Notificar al adaptador
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
 
         // Inicializar el reproductor
         playerView = findViewById(R.id.player_view)
@@ -68,6 +83,19 @@ class MainActivity : AppCompatActivity() {
         }, { channelToChange -> // Manejar el clic en "Cambiar Canal"
             changeChannel(channelToChange)
         })
+
+
+        val addButton = findViewById<Button>(R.id.btn_agregar_canal)
+        addButton.setOnClickListener {
+            val intent = Intent(this, AddChannelActivity::class.java)
+            startActivity(intent)
+        }
+
+        addButton.setOnClickListener {
+            // Iniciar AddChannelActivity
+            val intent = Intent(this, AddChannelActivity::class.java)
+            addChannelLauncher.launch(intent) // Cambia a usar el ActivityResultLauncher
+        }
 
         recyclerView.adapter = channelAdapter
 
