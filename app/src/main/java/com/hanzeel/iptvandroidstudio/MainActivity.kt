@@ -12,6 +12,10 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import java.io.Serializable
 
 class MainActivity : AppCompatActivity() {
@@ -22,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var playerView: PlayerView
     private lateinit var player: ExoPlayer
 
+    private val filename = "channels.txt"
 
     // Registrar el ActivityResultLauncher para manejar el resultado del EditChannelActivity
     private val editChannelLauncher = registerForActivityResult(
@@ -31,12 +36,14 @@ class MainActivity : AppCompatActivity() {
             val updatedChannel = result.data?.getSerializableExtra("updatedChannel") as? Channel
             updatedChannel?.let {
                 updateChannelInList(it)
+                saveChannelsToFile() // Guardar la lista actualizada
             }
 
             // Verificar si se eliminó un canal
             val deletedChannel = result.data?.getSerializableExtra("deletedChannel") as? Channel
             deletedChannel?.let {
                 deleteChannelFromList(it)
+                saveChannelsToFile() // Guardar la lista actualizada
             }
         }
     }
@@ -59,6 +66,7 @@ class MainActivity : AppCompatActivity() {
             newChannel?.let {
                 channelList.add(it) // Agregar el nuevo canal a la lista
                 channelAdapter.notifyItemInserted(channelList.size - 1) // Notificar al adaptador
+                saveChannelsToFile() // Guardar la lista actualizada
             }
         }
     }
@@ -84,10 +92,12 @@ class MainActivity : AppCompatActivity() {
             changeChannel(channelToChange)
         })
 
+        recyclerView.adapter = channelAdapter
 
         val addButton = findViewById<Button>(R.id.btn_agregar_canal)
         addButton.setOnClickListener {
             val intent = Intent(this, AddChannelActivity::class.java)
+            addChannelLauncher.launch(intent) // Checar si esta cambio funciona
             startActivity(intent)
         }
 
@@ -97,10 +107,10 @@ class MainActivity : AppCompatActivity() {
             addChannelLauncher.launch(intent) // Cambia a usar el ActivityResultLauncher
         }
 
-        recyclerView.adapter = channelAdapter
 
         // Cargar la lista de canales
         loadChannels()
+        loadChannelsFromFile()
     }
 
     // Función para abrir la actividad de edición
@@ -137,6 +147,39 @@ class MainActivity : AppCompatActivity() {
         channelList.add(Channel(12, "AKC TV Dogs", "Animales", "https://install.akctvcontrol.com/speed/broadcast/138/desktop-playlist.m3u8", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLPq9IAKaYCAvNxg2AWKukgyAtvBbMa9GVZQ&s"))
 
         channelAdapter.notifyDataSetChanged() // Notificar cambios al adaptador
+    }
+
+    private fun saveChannelsToFile() {
+        try {
+            val fileOutputStream = openFileOutput(filename, MODE_PRIVATE)
+            val objectOutputStream = ObjectOutputStream(fileOutputStream)
+            objectOutputStream.writeObject(channelList)
+            objectOutputStream.close()
+            fileOutputStream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    // Función para cargar los canales desde un archivo
+    private fun loadChannelsFromFile() {
+        try {
+            val fileInputStream = openFileInput(filename)
+            val objectInputStream = ObjectInputStream(fileInputStream)
+            val loadedChannels = objectInputStream.readObject() as MutableList<Channel>
+            channelList.clear()
+            channelList.addAll(loadedChannels)
+            objectInputStream.close()
+            fileInputStream.close()
+
+            channelAdapter.notifyDataSetChanged()
+        } catch (e: FileNotFoundException) {
+            // Archivo no encontrado, probablemente primera vez que se ejecuta la app
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: ClassNotFoundException) {
+            e.printStackTrace()
+        }
     }
 
     // Método para cambiar el canal
